@@ -51,14 +51,15 @@ final class GymViewModel {
 
     private var timerTask: Task<Void, Never>?
 
-    init(gymRepository: GymRepository, streakUseCase: StreakUseCase, templateRepository: WorkoutTemplateRepository, prRepository: PRLogRepository) {
+    init(gymRepository: GymRepository, streakUseCase: StreakUseCase, templateRepository: WorkoutTemplateRepository, prRepository: PRLogRepository, xpService: XPService? = nil) {
         self.gymRepository      = gymRepository
         self.streakUseCase      = streakUseCase
         self.templateRepository = templateRepository
         self.prRepository       = prRepository
         self.logUseCase = LogGymSessionUseCase(
             gymRepository: gymRepository,
-            streakUseCase: streakUseCase
+            streakUseCase: streakUseCase,
+            xpService: xpService
         )
         self.availableTemplates = (try? templateRepository.fetchAll()) ?? []
     }
@@ -137,15 +138,13 @@ final class GymViewModel {
         errorMessage = nil
 
         do {
-            try await logUseCase.execute(
-                workoutType: selectedWorkoutType,
-                exercises: exercises,
-                durationMinutes: totalMinutes,
-                notes: notes.isEmpty ? nil : notes
-            )
-            HapticManager.notification(.success)
+            // Detect overload before calling the use case
+            let hasOverload = exercises.contains {
+                if case .improved = overloadDelta(for: $0) { return true }
+                return false
+            }
 
-            // Auto-detect PRs for each finished exercise
+            // Detect PRs before save (so we can pass the count)
             var newPRNames: [String] = []
             for entry in exercises {
                 guard let weight = entry.weightKg, let reps = entry.reps, weight > 0, reps > 0 else { continue }
@@ -153,6 +152,16 @@ final class GymViewModel {
                     newPRNames.append(entry.name)
                 }
             }
+
+            try await logUseCase.execute(
+                workoutType: selectedWorkoutType,
+                exercises: exercises,
+                durationMinutes: totalMinutes,
+                notes: notes.isEmpty ? nil : notes,
+                hasOverload: hasOverload,
+                newPRCount: newPRNames.count
+            )
+            HapticManager.notification(.success)
 
             if newPRNames.isEmpty {
                 toastMessage = "Workout logged! 💪"

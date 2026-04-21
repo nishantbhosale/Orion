@@ -7,10 +7,12 @@ import SwiftData
 final class LogStudySessionUseCase {
     private let studyRepository: StudyRepository
     private let streakUseCase: StreakUseCase
+    weak var xpService: XPService?   // Optional — safe if gamification not yet injected
 
-    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase) {
+    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase, xpService: XPService? = nil) {
         self.studyRepository = studyRepository
-        self.streakUseCase = streakUseCase
+        self.streakUseCase   = streakUseCase
+        self.xpService       = xpService
     }
 
     func execute(
@@ -39,6 +41,12 @@ final class LogStudySessionUseCase {
 
         try studyRepository.save(session)
         await streakUseCase.recordHabitCompletion(category: .study)
+
+        // XP Awards
+        await xpService?.award(.studySessionLogged, sourceId: session.id)
+        if focusScore != nil {
+            await xpService?.award(.focusScoreGiven, sourceId: session.id)
+        }
 
         // Schedule streak danger reminder update
         await NotificationManager.shared.updateDailyReminder()

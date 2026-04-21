@@ -8,11 +8,13 @@ struct StreakView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: StreakViewModel
 
-    init(streakUseCase: StreakUseCase, modelContext: ModelContext) {
+    init(streakUseCase: StreakUseCase, modelContext: ModelContext, xpService: XPService? = nil) {
+        let weightRepo = BodyMetricRepository(modelContext: modelContext)
+        weightRepo.xpService = xpService
         let tempVM = StreakViewModel(
             streakUseCase: streakUseCase,
             habitRepository: HabitRepository(modelContext: modelContext),
-            weightRepository: BodyMetricRepository(modelContext: modelContext),
+            weightRepository: weightRepo,
             gymRepository: GymRepository(modelContext: modelContext)
         )
         _viewModel = State(initialValue: tempVM)

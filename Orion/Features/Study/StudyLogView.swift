@@ -25,10 +25,11 @@ struct StudyLogView: View {
         allSessions.filter { DateHelper.isToday($0.date) }
     }
 
-    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase) {
+    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase, xpService: XPService? = nil) {
         _viewModel = State(initialValue: StudyViewModel(
             studyRepository: studyRepository,
-            streakUseCase: streakUseCase
+            streakUseCase: streakUseCase,
+            xpService: xpService
         ))
     }
 
