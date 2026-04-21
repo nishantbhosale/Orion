@@ -2,17 +2,18 @@
 
 import SwiftUI
 import SwiftData
+import Charts
 
 struct StreakView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: StreakViewModel
 
-    init(streakUseCase: StreakUseCase) {
-        // HabitRepository needs the modelContext — passed via environment
-        // We init with a temporary VM; the real load happens in .task
+    init(streakUseCase: StreakUseCase, modelContext: ModelContext) {
         let tempVM = StreakViewModel(
             streakUseCase: streakUseCase,
-            habitRepository: HabitRepository(modelContext: ModelContext(try! ModelContainer(for: Schema(versionedSchema: SchemaV1.self), migrationPlan: OrionMigrationPlan.self)))
+            habitRepository: HabitRepository(modelContext: modelContext),
+            weightRepository: BodyMetricRepository(modelContext: modelContext),
+            gymRepository: GymRepository(modelContext: modelContext)
         )
         _viewModel = State(initialValue: tempVM)
     }
@@ -27,6 +28,8 @@ struct StreakView: View {
                     statsPanel
                     monthlyCalendar
                     milestoneBadges
+                    bodyWeightCard
+                    volumeChartCard
                 }
                 .padding(.horizontal, Spacing.md)
                 .padding(.bottom, Spacing.xxl)
@@ -37,6 +40,9 @@ struct StreakView: View {
         .toolbarBackground(.clear, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .task { await viewModel.onAppear() }
+        .sheet(isPresented: $viewModel.showWeightLogSheet) {
+            LogWeightSheet(viewModel: viewModel)
+        }
     }
 
     // MARK: — Constellation Section
@@ -210,13 +216,138 @@ struct StreakView: View {
         if log.hasGym   { return "Day \(dayNum), gym completed" }
         return "Day \(dayNum)"
     }
+
+    // MARK: — Body Weight
+    private var bodyWeightCard: some View {
+        NebulaCardView {
+            VStack(alignment: .leading, spacing: Spacing.md) {
+                HStack {
+                    Label("Body Weight", systemImage: "scalemass.fill")
+                        .font(.orbitHeading())
+                        .foregroundStyle(Color.starWhite)
+                    
+                    Spacer()
+                    
+                    Button {
+                        HapticManager.impact(.light)
+                        viewModel.showWeightLogSheet = true
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Log")
+                        }
+                        .font(.moonCaption(13))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.auroraTeal)
+                    }
+                }
+
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        if let latest = viewModel.latestWeight {
+                            Text("\(String(format: "%.1f", latest.weightKg)) \(viewModel.weightUnit)")
+                                .font(.cosmicTitle(32))
+                                .foregroundStyle(Color.starWhite)
+                            Text(viewModel.weightTrend)
+                                .font(.moonCaption())
+                                .foregroundStyle(Color.auroraTeal)
+                        } else {
+                            Text("No weight logged")
+                                .font(.starBody())
+                                .foregroundStyle(Color.moonGray)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    // Sparkline
+                    if viewModel.last30Weights.count >= 2 {
+                        Chart(viewModel.last30Weights) { log in
+                            LineMark(
+                                x: .value("Date", log.date),
+                                y: .value("Weight", log.weightKg)
+                            )
+                            .interpolationMethod(.catmullRom)
+                            .foregroundStyle(Color.auroraTeal)
+                            
+                            PointMark(
+                                x: .value("Date", log.date),
+                                y: .value("Weight", log.weightKg)
+                            )
+                            .foregroundStyle(Color.auroraTeal)
+                            .symbolSize(log.id == viewModel.latestWeight?.id ? 20 : 0)
+                        }
+                        .chartXAxis(.hidden)
+                        .chartYAxis(.hidden)
+                        .chartYScale(domain: .automatic(includesZero: false))
+                        .frame(width: 100, height: 40)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: — Volume Chart
+    @ViewBuilder
+    private var volumeChartCard: some View {
+        let volumes = viewModel.gymStats.weeklyMuscleVolume
+        let warnings = viewModel.gymStats.imbalanceWarnings
+
+        if !volumes.isEmpty {
+            NebulaCardView {
+                VStack(alignment: .leading, spacing: Spacing.md) {
+                    Label("Volume This Week", systemImage: "chart.bar.fill")
+                        .font(.orbitHeading())
+                        .foregroundStyle(Color.starWhite)
+
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(volumes) { mv in
+                            HStack(spacing: Spacing.sm) {
+                                Text(mv.group.displayName)
+                                    .font(.moonCaption(12))
+                                    .foregroundStyle(Color.moonGray)
+                                    .frame(width: 72, alignment: .leading)
+
+                                GeometryReader { geo in
+                                    ZStack(alignment: .leading) {
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(Color.novaOrange.opacity(0.12))
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(Color.novaOrange.opacity(0.7))
+                                            .frame(width: geo.size.width * mv.barFraction)
+                                    }
+                                }
+                                .frame(height: 12)
+
+                                Text("\(mv.totalSets)s")
+                                    .font(.moonCaption(11))
+                                    .foregroundStyle(Color.novaOrange)
+                                    .frame(width: 28, alignment: .trailing)
+                            }
+                        }
+                    }
+
+                    if !warnings.isEmpty {
+                        Divider().background(Color.surfaceBorder)
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(warnings, id: \.self) { warning in
+                                Text(warning)
+                                    .font(.moonCaption(12))
+                                    .foregroundStyle(Color.streakGold)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: — StreakView with ModelContext-aware init
 extension StreakView {
     // Factory for use from HomeViewModel where we have modelContext
     static func make(streakUseCase: StreakUseCase, modelContext: ModelContext) -> StreakView {
-        StreakView(streakUseCase: streakUseCase)
+        StreakView(streakUseCase: streakUseCase, modelContext: modelContext)
     }
 }
 

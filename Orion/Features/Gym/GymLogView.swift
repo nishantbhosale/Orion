@@ -5,6 +5,7 @@ import SwiftData
 
 struct GymLogView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(RestTimerManager.self) private var restTimer
     @State private var viewModel: GymViewModel
 
     @Query(sort: \GymSession.createdAt, order: .reverse)
@@ -14,10 +15,12 @@ struct GymLogView: View {
         allSessions.filter { DateHelper.isToday($0.date) }
     }
 
-    init(gymRepository: GymRepository, streakUseCase: StreakUseCase) {
+    init(gymRepository: GymRepository, streakUseCase: StreakUseCase, modelContext: ModelContext) {
         _viewModel = State(initialValue: GymViewModel(
             gymRepository: gymRepository,
-            streakUseCase: streakUseCase
+            streakUseCase: streakUseCase,
+            templateRepository: WorkoutTemplateRepository(modelContext: modelContext),
+            prRepository: PRLogRepository(modelContext: modelContext)
         ))
     }
 
@@ -52,6 +55,9 @@ struct GymLogView: View {
                 .padding(.horizontal, Spacing.md)
                 .padding(.bottom, Spacing.xxl)
             }
+
+            // Floating overlay for rest timer
+            RestTimerOverlay()
         }
         .navigationTitle("Gym")
         .navigationBarTitleDisplayMode(.inline)
@@ -59,6 +65,16 @@ struct GymLogView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
         .sheet(isPresented: $viewModel.showExerciseSheet) {
             AddExerciseSheet(viewModel: viewModel)
+        }
+        .sheet(isPresented: $viewModel.showTemplateSheet) {
+            TemplatePickerSheet(viewModel: viewModel)
+        }
+        .alert("Save as Template", isPresented: $viewModel.showSaveTemplateAlert) {
+            TextField("Template name", text: $viewModel.newTemplateName)
+            Button("Save") { viewModel.saveCurrentAsTemplate() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Give this workout a name to save it as a reusable template.")
         }
         .shootingStarToast(message: viewModel.toastMessage, isShowing: $viewModel.showToast)
         .onDisappear { viewModel.onDisappear() }
@@ -76,10 +92,35 @@ struct GymLogView: View {
                     .foregroundStyle(Color.moonGray)
             }
             Spacer()
-            Image(systemName: "dumbbell.fill")
-                .font(.system(size: 28))
-                .foregroundStyle(Color.novaOrange)
-                .shadow(color: Color.novaOrange.opacity(0.6), radius: 8)
+            HStack(spacing: Spacing.md) {
+                // Load template
+                Button {
+                    HapticManager.impact(.light)
+                    viewModel.showTemplateSheet = true
+                } label: {
+                    Image(systemName: "doc.on.doc.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(Color.auroraTeal)
+                }
+                .accessibilityLabel("Load workout template")
+
+                // Save as template
+                Button {
+                    HapticManager.impact(.light)
+                    viewModel.showSaveTemplateAlert = true
+                } label: {
+                    Image(systemName: "bookmark.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(viewModel.exercises.isEmpty ? Color.moonGray.opacity(0.4) : Color.novaOrange)
+                }
+                .disabled(viewModel.exercises.isEmpty)
+                .accessibilityLabel("Save workout as template")
+
+                Image(systemName: "dumbbell.fill")
+                    .font(.system(size: 24))
+                    .foregroundStyle(Color.novaOrange)
+                    .shadow(color: Color.novaOrange.opacity(0.6), radius: 8)
+            }
         }
         .padding(.top, Spacing.sm)
     }
@@ -171,11 +212,42 @@ struct GymLogView: View {
                                 Text(exercise.name)
                                     .font(.starBody())
                                     .foregroundStyle(Color.starWhite)
-                                Text(exercise.summary)
-                                    .font(.moonCaption())
-                                    .foregroundStyle(Color.moonGray)
+                                HStack(spacing: Spacing.xs) {
+                                    Text(exercise.summary)
+                                        .font(.moonCaption())
+                                        .foregroundStyle(Color.moonGray)
+                                    if let rmLabel = viewModel.prGainLabel(for: exercise) {
+                                        Text(rmLabel)
+                                            .font(.moonCaption(11))
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(Color.streakGold)
+                                    } else if let rm = viewModel.live1RM(for: exercise) {
+                                        Text("~\(String(format: "%.0f", rm))kg 1RM")
+                                            .font(.moonCaption(11))
+                                            .foregroundStyle(Color.dustGray)
+                                    }
+                                }
                             }
                             Spacer()
+                            
+                            // Overload Badge
+                            let delta = viewModel.overloadDelta(for: exercise)
+                            HStack(spacing: 4) {
+                                Image(systemName: delta.icon)
+                                if case .improved(let label) = delta {
+                                    Text(label)
+                                }
+                            }
+                            .font(.moonCaption(10))
+                            .fontWeight(.bold)
+                            .foregroundStyle(delta.color)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(delta.color.opacity(0.15))
+                            .clipShape(Capsule())
+
+                            StartRestTimerButton(seconds: exercise.restSeconds)
+                            
                             Button {
                                 withAnimation { viewModel.removeExercise(exercise) }
                             } label: {
@@ -387,22 +459,41 @@ struct AddExerciseSheet: View {
                                 .background(Color.nebulaCard)
                                 .clipShape(RoundedRectangle(cornerRadius: CornerRadius.md))
                                 .autocorrectionDisabled()
+                                .onChange(of: viewModel.newExerciseName) {
+                                    if let suggestion = viewModel.suggestMuscleGroup(for: viewModel.newExerciseName) {
+                                        viewModel.newExerciseMuscleGroup = suggestion
+                                    }
+                                }
 
-                            // Smart suggestions
+                        }
+
+                        // Muscle Group Selection
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            Text("Muscle Group")
+                                .font(.moonCaption())
+                                .foregroundStyle(Color.moonGray)
+                            
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: Spacing.sm) {
-                                    ForEach(viewModel.exerciseSuggestions, id: \.self) { suggestion in
-                                        Button(suggestion) {
-                                            viewModel.newExerciseName = suggestion
+                                    ForEach(MuscleGroup.allCases, id: \.self) { group in
+                                        Button {
+                                            viewModel.newExerciseMuscleGroup = group
+                                        } label: {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: group.systemImage)
+                                                Text(group.displayName)
+                                            }
+                                            .font(.moonCaption(13))
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 8)
+                                            .background(viewModel.newExerciseMuscleGroup == group ? Color.novaOrange.opacity(0.2) : Color.nebulaCard)
+                                            .foregroundStyle(viewModel.newExerciseMuscleGroup == group ? Color.novaOrange : Color.moonGray)
+                                            .clipShape(Capsule())
+                                            .overlay(
+                                                Capsule()
+                                                    .strokeBorder(viewModel.newExerciseMuscleGroup == group ? Color.novaOrange.opacity(0.5) : Color.surfaceBorder, lineWidth: 1)
+                                            )
                                         }
-                                        .font(.moonCaption())
-                                        .foregroundStyle(Color.moonGray)
-                                        .padding(.horizontal, Spacing.sm)
-                                        .padding(.vertical, 4)
-                                        .background(
-                                            Capsule()
-                                                .strokeBorder(Color.surfaceBorder, lineWidth: 1)
-                                        )
                                         .buttonStyle(.plain)
                                     }
                                 }
@@ -424,6 +515,9 @@ struct AddExerciseSheet: View {
                         } else {
                             // Reps
                             stepperRow(label: "Reps", value: $viewModel.newExerciseReps, range: 1...50)
+                            
+                            // Rest Timer
+                            stepperRow(label: "Rest Timer (sec)", value: $viewModel.newExerciseRestSeconds, range: 30...300, step: 15)
                         }
 
                         // Weight

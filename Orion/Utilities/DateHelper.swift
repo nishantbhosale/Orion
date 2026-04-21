@@ -9,6 +9,10 @@ enum DateHelper {
         calendar.startOfDay(for: date)
     }
 
+    static func startOfMonth(for date: Date = .now) -> Date {
+        calendar.dateInterval(of: .month, for: date)?.start ?? date
+    }
+
     static func startOfWeek(for date: Date = .now, calendar: Calendar = .current) -> Date {
         var cal = calendar
         cal.firstWeekday = 2  // Monday

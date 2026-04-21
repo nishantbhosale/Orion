@@ -10,12 +10,16 @@ import SwiftUI
 final class HomeViewModel {
     private let studyRepository: StudyRepository
     private let gymRepository: GymRepository
+    private let weightRepository: BodyMetricRepositoryProtocol
     let streakUseCase: StreakUseCase
 
     // Streak
     var displayedStreak: Int = 0
     var currentStreak: Int = 0
     var todayCompleted: Bool = false
+
+    // Weight
+    var latestWeightStr: String?
 
     // Today's progress
     var studyMinutesToday: Int = 0
@@ -31,6 +35,9 @@ final class HomeViewModel {
     @ObservationIgnored @AppStorage(UserPreferencesKey.gymGoalSessions)
     var gymGoalSessions: Int = UserPreferencesKey.defaultGymGoalSessions
 
+    @ObservationIgnored @AppStorage(UserPreferencesKey.weightUnit)
+    var weightUnit: String = "kg"
+
     var studyProgress: Double {
         guard studyGoalMinutes > 0 else { return 0 }
         return min(Double(studyMinutesToday) / Double(studyGoalMinutes), 1.0)
@@ -45,10 +52,16 @@ final class HomeViewModel {
         DateHelper.formatDuration(minutes: studyMinutesToday)
     }
 
-    init(studyRepository: StudyRepository, gymRepository: GymRepository, streakUseCase: StreakUseCase) {
-        self.studyRepository = studyRepository
-        self.gymRepository   = gymRepository
-        self.streakUseCase   = streakUseCase
+    init(
+        studyRepository: StudyRepository, 
+        gymRepository: GymRepository, 
+        weightRepository: BodyMetricRepositoryProtocol,
+        streakUseCase: StreakUseCase
+    ) {
+        self.studyRepository  = studyRepository
+        self.gymRepository    = gymRepository
+        self.weightRepository = weightRepository
+        self.streakUseCase    = streakUseCase
     }
 
     func onAppear() async {
@@ -65,6 +78,17 @@ final class HomeViewModel {
             gymSessionsToday  = todayGym.count
             currentStreak     = streakUseCase.currentStreak
             todayCompleted    = streakUseCase.todayCompleted
+            
+            // Weight refresh
+            if let weight = try weightRepository.fetchLatest() {
+                let unit = weightUnit
+                let weightVal = weight.weightKg // Simplified, unit conversion in v1.2 or via computed
+                let daysAgo = Calendar.current.dateComponents([.day], from: weight.date, to: .now).day ?? 0
+                let dateStr = daysAgo == 0 ? "Today" : (daysAgo == 1 ? "Yesterday" : "\(daysAgo)d ago")
+                latestWeightStr = "\(String(format: "%.1f", weightVal))\(unit) · \(dateStr)"
+            } else {
+                latestWeightStr = nil
+            }
 
             // Build recent sessions list (last 5 across both categories)
             let studySessions: [(HabitCategory, String, String, String, Date)] = (try studyRepository.fetchAll())

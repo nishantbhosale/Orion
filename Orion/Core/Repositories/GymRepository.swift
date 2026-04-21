@@ -65,4 +65,19 @@ final class GymRepository {
         modelContext.delete(session)
         try modelContext.save()
     }
+
+    func fetchLastSession(containing exerciseName: String, before date: Date) throws -> GymSession? {
+        let descriptor = FetchDescriptor<GymSession>(
+            predicate: #Predicate<GymSession> { $0.date < date },
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        let sessions = try modelContext.fetch(descriptor)
+        let target = exerciseName.lowercased().trimmingCharacters(in: .whitespaces)
+        
+        return sessions.first { session in
+            session.exercises.contains { 
+                $0.name.lowercased().trimmingCharacters(in: .whitespaces) == target 
+            }
+        }
+    }
 }
