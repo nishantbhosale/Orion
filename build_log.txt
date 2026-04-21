@@ -1,0 +1,273 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Orion.xcodeproj -scheme Orion -destination "generic/platform=iOS Simulator" -configuration Debug build
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Orion' in project 'Orion' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.4-23E237-686eebb5dc1d8ecb277353a59184f4aa.sdkstatcache
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk -o /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.4-23E237-686eebb5dc1d8ecb277353a59184f4aa.sdkstatcache
+
+SwiftDriver Orion normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Orion -Onone @/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk -target x86_64-apple-ios17.0-simulator -g -module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -F /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.4-23E237-686eebb5dc1d8ecb277353a59184f4aa.sdkstatcache -output-file-map /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion_const_extract_protocols.json -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-generated-files.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-own-target-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-all-target-headers.hmap -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-project-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources-normal/x86_64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources/x86_64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion-Swift.h -working-directory /Users/nishantbhosale/Nishant/Study/vibecoding/Orion -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver Orion normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Orion -Onone @/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/arm64/Orion.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -F /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.4-23E237-686eebb5dc1d8ecb277353a59184f4aa.sdkstatcache -output-file-map /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/arm64/Orion-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/arm64/Orion.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/arm64/Orion_const_extract_protocols.json -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-generated-files.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-own-target-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-all-target-headers.hmap -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-project-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources-normal/arm64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources/arm64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/arm64/Orion-Swift.h -working-directory /Users/nishantbhosale/Nishant/Study/vibecoding/Orion -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal x86_64 Compiling\ DateHelper.swift,\ EmptyStateView.swift,\ GymHistoryView.swift,\ GymLogView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/DateHelper.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/EmptyStateView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymHistoryView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymLogView.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/DateHelper.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/EmptyStateView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymHistoryView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymLogView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ PulsingStarButton.swift,\ StarFieldView.swift,\ StreakData.swift,\ StreakUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/PulsingStarButton.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/StarFieldView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StreakData.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/StreakUseCase.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/PulsingStarButton.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/StarFieldView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StreakData.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/StreakUseCase.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ StreakView.swift,\ StreakViewModel.swift,\ StudyHistoryView.swift,\ StudyLogView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyHistoryView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyLogView.swift (in target 'Orion' from project 'Orion')
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyHistoryView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyLogView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ HistoryView.swift,\ HistoryViewModel.swift,\ HomeView.swift,\ HomeViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeViewModel.swift (in target 'Orion' from project 'Orion')
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/DesignSystem/AnimationConstants.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/AppDelegate.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/DesignSystem/Colors.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/ConstellationStreakView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/CosmicTabBar.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/DateHelper.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/EmptyStateView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymHistoryView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymLogView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/GymRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/GymSession.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/GymWorkoutType.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/HabitCategory.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/HabitLog.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/HabitRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/HapticManager.swift -primary-file /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryView.swift -primary-file /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryViewModel.swift -primary-file /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeView.swift -primary-file /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogGymSessionUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogStudySessionUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/NebulaCardView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/NotificationManager.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Onboarding/OnboardingView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/OrbitProgressRing.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/OrionApp.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/OrionMigrationPlan.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/PulsingStarButton.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/SchemaV1.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Settings/SettingsView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Settings/SettingsViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/ShootingStarToast.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/DesignSystem/Spacing.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/StarFieldView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StreakData.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/StreakUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Streak/StreakViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyHistoryView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyLogView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/StudyRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StudySession.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/StudySubject.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/DesignSystem/Typography.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/UserPreferences.swift /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/supplementaryOutputs-4 -target x86_64-apple-ios17.0-simulator -module-can-import-version DeveloperToolsSupport 23.40.26 23.40.26 -disable-cross-import-overlay-search -swift-module-cross-import SwiftData /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk/System/Library/Frameworks/SwiftData.framework/Modules/SwiftData.swiftcrossimport/CoreData.swiftoverlay -swift-module-cross-import SwiftData /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk/System/Library/Frameworks/SwiftData.framework/Modules/SwiftData.swiftcrossimport/SwiftUI.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftDataMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftDataMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion-dependencies-1.json -debug-module-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion.swiftmodule -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.4.sdk -I /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -F /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -swift-version 5 -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/Orion_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/nishantbhosale/Nishant/Study/vibecoding/Orion -enable-anonymous-context-mangled-names -file-compilation-dir /Users/nishantbhosale/Nishant/Study/vibecoding/Orion -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.4-23E237-686eebb5dc1d8ecb277353a59184f4aa.sdkstatcache -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-generated-files.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-own-target-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-all-target-headers.hmap -Xcc -iquote -Xcc /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Orion-project-headers.hmap -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources-normal/x86_64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources/x86_64 -Xcc -I/Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name Orion -frontend-parseable-output -disable-clang-spi -clang-target x86_64-apple-ios26.4-simulator -target-sdk-version 26.4 -target-sdk-name iphonesimulator26.4 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HistoryView.o -o /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HistoryViewModel.o -o /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HomeView.o -o /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Build/Intermediates.noindex/Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HomeViewModel.o -index-unit-output-path /Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HistoryView.o -index-unit-output-path /Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HistoryViewModel.o -index-unit-output-path /Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HomeView.o -index-unit-output-path /Orion.build/Debug-iphonesimulator/Orion.build/Objects-normal/x86_64/HomeViewModel.o -index-store-path /Users/nishantbhosale/Library/Developer/Xcode/DerivedData/Orion-gmzxlxtmkcxohtbxzbfnquelybzn/Index.noindex/DataStore -index-system-modules
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryView.swift:219:68: error: value of type 'String' has no member 'displayName'
+                detailRow(label: "Subject", value: session.subject.displayName)
+                                                   ~~~~~~~~~~~~~~~ ^~~~~~~~~~~
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/History/HistoryViewModel.swift:55:63: error: value of type 'String' has no member 'displayName'
+        case .study(let s): return s.topicDetail ?? s.subject.displayName
+                                                    ~~~~~~~~~ ^~~~~~~~~~~
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Home/HomeViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ HabitCategory.swift,\ HabitLog.swift,\ HabitRepository.swift,\ HapticManager.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/HabitCategory.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/HabitLog.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/HabitRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/HapticManager.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/HabitCategory.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/HabitLog.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/HabitRepository.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/HapticManager.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ LogGymSessionUseCase.swift,\ LogStudySessionUseCase.swift,\ NebulaCardView.swift,\ NotificationManager.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogGymSessionUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogStudySessionUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/NebulaCardView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/NotificationManager.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogGymSessionUseCase.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/LogStudySessionUseCase.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/NebulaCardView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/NotificationManager.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/NotificationManager.swift:26:9: warning: no 'async' operations occur within 'await' expression
+        await center.removePendingNotificationRequests(withIdentifiers: ["orion_daily_reminder"])
+        ^
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Utilities/NotificationManager.swift:50:9: warning: no 'async' operations occur within 'await' expression
+        await center.removePendingNotificationRequests(withIdentifiers: ["orion_streak_danger"])
+        ^
+
+SwiftCompile normal x86_64 Compiling\ GymRepository.swift,\ GymSession.swift,\ GymViewModel.swift,\ GymWorkoutType.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/GymRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/GymSession.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/GymWorkoutType.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/GymRepository.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/GymSession.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/GymWorkoutType.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftEmitModule normal x86_64 Emitting\ module\ for\ Orion (in target 'Orion' from project 'Orion')
+
+EmitSwiftModule normal x86_64 (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ OnboardingView.swift,\ OrbitProgressRing.swift,\ OrionApp.swift,\ OrionMigrationPlan.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Onboarding/OnboardingView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/OrbitProgressRing.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/OrionApp.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/OrionMigrationPlan.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Onboarding/OnboardingView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Components/OrbitProgressRing.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/OrionApp.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/OrionApp.swift:40:33: warning: no 'async' operations occur within 'await' expression
+                let habitRepo = await HabitRepository(modelContext: context)
+                                ^
+/Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/App/OrionApp.swift:41:33: warning: no 'async' operations occur within 'await' expression
+                let streakUC  = await StreakUseCase(habitRepository: habitRepo)
+                                ^
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/OrionMigrationPlan.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 Compiling\ StudyRepository.swift,\ StudySession.swift,\ StudySubject.swift,\ StudyViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/StudyRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StudySession.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/StudySubject.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyViewModel.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/StudyRepository.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/StudySession.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/Enums/StudySubject.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Orion (in target 'Orion' from project 'Orion')
+
+EmitSwiftModule normal arm64 (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling HabitCategory.swift, HabitLog.swift, HabitRepository.swift, HapticManager.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 Compiling\ StreakUseCase.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/StreakUseCase.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/UseCases/StreakUseCase.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling LogGymSessionUseCase.swift, LogStudySessionUseCase.swift, NebulaCardView.swift, NotificationManager.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 Compiling\ StudyViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyViewModel.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Study/StudyViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling OnboardingView.swift, OrbitProgressRing.swift, OrionApp.swift, OrionMigrationPlan.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 Compiling\ SettingsView.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Settings/SettingsView.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Settings/SettingsView.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling GymRepository.swift, GymSession.swift, GymViewModel.swift, GymWorkoutType.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 Compiling\ GymViewModel.swift,\ HabitRepository.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymViewModel.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/HabitRepository.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal arm64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Features/Gym/GymViewModel.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftCompile normal arm64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Repositories/HabitRepository.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling StudyRepository.swift, StudySession.swift, StudySubject.swift, StudyViewModel.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 Compiling\ SchemaV1.swift /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/SchemaV1.swift (in target 'Orion' from project 'Orion')
+
+SwiftCompile normal x86_64 /Users/nishantbhosale/Nishant/Study/vibecoding/Orion/Orion/Core/Models/SchemaVersions/SchemaV1.swift (in target 'Orion' from project 'Orion')
+    cd /Users/nishantbhosale/Nishant/Study/vibecoding/Orion
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling PulsingStarButton.swift, StarFieldView.swift, StreakData.swift, StreakUseCase.swift (in target 'Orion' from project 'Orion')
+
