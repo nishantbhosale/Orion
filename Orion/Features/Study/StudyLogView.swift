@@ -9,6 +9,14 @@ struct StudyLogView: View {
     @AppStorage(UserPreferencesKey.studySubjects) private var studySubjects: [String] = UserPreferencesKey.defaultStudySubjects
     @AppStorage(UserPreferencesKey.weeklyGoalCelebratedDate) private var celebratedDate: String = ""
     @Environment(StudyStatsService.self) private var statsService
+    @Environment(PomodoroManager.self) private var pomodoroManager
+
+    enum DurationMode: String, CaseIterable {
+        case manual   = "Manual"
+        case timer    = "Timer"
+        case pomodoro = "Pomodoro"
+    }
+    @State private var durationMode: DurationMode = .manual
 
     @Query(sort: \StudySession.createdAt, order: .reverse)
     private var allSessions: [StudySession]
@@ -192,23 +200,23 @@ struct StudyLogView: View {
     // MARK: — Duration Section
     private var durationSection: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack {
-                Label("Duration", systemImage: "clock.fill")
-                    .font(.moonCaption())
-                    .foregroundStyle(Color.moonGray)
-                Spacer()
-                Toggle("Timer Mode", isOn: $viewModel.useTimer.animation())
-                    .labelsHidden()
-                    .tint(Color.auroraTeal)
-                Text("Timer")
-                    .font(.moonCaption())
-                    .foregroundStyle(Color.moonGray)
+            // Mode picker
+            Picker("Mode", selection: $durationMode.animation()) {
+                ForEach(DurationMode.allCases, id: \.self) { mode in
+                    Text(mode.rawValue).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: durationMode) { _, mode in
+                // Sync useTimer for legacy logic
+                viewModel.useTimer = (mode == .timer)
+                if mode != .pomodoro { pomodoroManager.pause() }
             }
 
-            if viewModel.useTimer {
-                timerSection
-            } else {
-                manualDurationPickers
+            switch durationMode {
+            case .manual:   manualDurationPickers
+            case .timer:    timerSection
+            case .pomodoro: PomodoroRingView().padding(.top, Spacing.sm)
             }
         }
     }
@@ -615,5 +623,141 @@ struct FocusRatingSheet: View {
     private func cancelAutoDismiss() {
         autoDismissTask?.cancel()
         autoDismissTask = nil
+    }
+}
+// PomodoroRingView.swift — Features/Study
+// Premium countdown ring for the Pomodoro timer mode.
+// Displays a gradient arc, pulsing glow, an MM:SS counter, phase label,
+// and a row of completed-pomodoro dots below.
+
+import SwiftUI
+
+struct PomodoroRingView: View {
+    @Environment(PomodoroManager.self) private var manager
+
+    // Ring interpolates: focus = teal → orange as time depletes
+    private var ringColor: Color {
+        switch manager.phase {
+        case .focus:      return Color.auroraTeal.interpolated(to: .novaOrange, fraction: manager.progress)
+        case .shortBreak: return Color.pulsarPurple
+        case .longBreak:  return Color.streakGold
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: Spacing.lg) {
+            // ── Ring ──────────────────────────────
+            ZStack {
+                // Track ring
+                Circle()
+                    .stroke(Color.surfaceBorder, lineWidth: 12)
+                    .frame(width: 200, height: 200)
+
+                // Progress arc
+                Circle()
+                    .trim(from: 0, to: CGFloat(manager.progress))
+                    .stroke(
+                        AngularGradient(
+                            colors: [ringColor.opacity(0.4), ringColor],
+                            center: .center
+                        ),
+                        style: StrokeStyle(lineWidth: 10, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(-90))
+                    .frame(width: 200, height: 200)
+                    .shadow(color: ringColor.opacity(0.5), radius: 8)
+                    .animation(.linear(duration: 1), value: manager.progress)
+
+                // Inner content
+                VStack(spacing: 4) {
+                    Image(systemName: manager.phase.icon)
+                        .font(.system(size: 20))
+                        .foregroundStyle(ringColor)
+                        .shadow(color: ringColor.opacity(0.7), radius: 6)
+
+                    Text(manager.timeDisplay)
+                        .font(.monoData(40))
+                        .foregroundStyle(Color.starWhite)
+                        .contentTransition(.numericText())
+                        .animation(.linear(duration: 0.3), value: manager.timeDisplay)
+
+                    Text(manager.phase.rawValue)
+                        .font(.moonCaption(12))
+                        .foregroundStyle(Color.moonGray)
+                }
+            }
+
+            // ── Controls ─────────────────────────
+            HStack(spacing: Spacing.xl) {
+                // Stop
+                Button {
+                    HapticManager.impact(.medium)
+                    manager.stop()
+                } label: {
+                    Image(systemName: "stop.circle.fill")
+                        .font(.system(size: 36))
+                        .foregroundStyle(Color.novaOrange.opacity(0.8))
+                }
+                .accessibilityLabel("Stop Pomodoro")
+
+                // Play / Pause
+                Button {
+                    HapticManager.impact(.medium)
+                    manager.isRunning ? manager.pause() : manager.start()
+                } label: {
+                    Image(systemName: manager.isRunning ? "pause.circle.fill" : "play.circle.fill")
+                        .font(.system(size: 54))
+                        .foregroundStyle(ringColor)
+                        .shadow(color: ringColor.opacity(0.5), radius: 10)
+                        .scaleEffect(manager.isRunning ? 1.0 : 1.05)
+                        .animation(.spring(response: 0.3), value: manager.isRunning)
+                }
+                .accessibilityLabel(manager.isRunning ? "Pause focus session" : "Start focus session")
+
+                // Skip
+                Button {
+                    HapticManager.impact(.light)
+                    manager.skipPhase()
+                } label: {
+                    Image(systemName: "forward.end.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(Color.moonGray.opacity(0.7))
+                }
+                .accessibilityLabel("Skip to next phase")
+            }
+
+            // ── Completed dots ────────────────────
+            if manager.completedPomodoros > 0 {
+                HStack(spacing: 6) {
+                    ForEach(0..<min(manager.completedPomodoros, 8), id: \.self) { i in
+                        Circle()
+                            .fill(i < manager.completedPomodoros ? Color.streakGold : Color.surfaceBorder)
+                            .frame(width: 8, height: 8)
+                            .shadow(color: Color.streakGold.opacity(0.6), radius: 3)
+                    }
+                }
+                .padding(.top, -Spacing.sm)
+            }
+        }
+    }
+}
+
+// MARK: — Color interpolation helper
+extension Color {
+    /// Linearly interpolates between two colours in RGB space.
+    func interpolated(to target: Color, fraction: Double) -> Color {
+        let t = max(0, min(1, fraction))
+        let from = UIColor(self)
+        let to   = UIColor(target)
+        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
+        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0
+        from.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        to.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        return Color(
+            red:   r1 + (r2 - r1) * t,
+            green: g1 + (g2 - g1) * t,
+            blue:  b1 + (b2 - b1) * t,
+            opacity: 1
+        )
     }
 }

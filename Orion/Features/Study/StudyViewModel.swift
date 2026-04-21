@@ -158,3 +158,216 @@ final class StudyViewModel {
         timerSeconds = 0
     }
 }
+// PomodoroManager.swift — Features/Study
+// Governs Pomodoro lifecycle: phases, countdown, background drift compensation,
+// notifications, and daily star tally. Consumed via @Environment from OrionApp.
+
+import Foundation
+import SwiftUI
+import UserNotifications
+
+enum PomodoroPhase: String {
+    case focus      = "Focus"
+    case shortBreak = "Short Break"
+    case longBreak  = "Long Break"
+
+    var icon: String {
+        switch self {
+        case .focus:      return "brain.head.profile"
+        case .shortBreak: return "cup.and.saucer.fill"
+        case .longBreak:  return "moon.zzz.fill"
+        }
+    }
+}
+
+@Observable
+final class PomodoroManager {
+    // ── AppStorage keys (backing values)
+    @ObservationIgnored @AppStorage(UserPreferencesKey.pomodoroDurationMinutes)   private var focusMins: Int = 25
+    @ObservationIgnored @AppStorage(UserPreferencesKey.pomodoroShortBreakMinutes) private var shortMins: Int = 5
+    @ObservationIgnored @AppStorage(UserPreferencesKey.pomodoroLongBreakMinutes)  private var longMins: Int  = 15
+    @ObservationIgnored @AppStorage(UserPreferencesKey.todayPomodoroStars)        private var storedStars: Int = 0
+    @ObservationIgnored @AppStorage(UserPreferencesKey.todayPomodoroStarsDate)    private var starsDate: String = ""
+
+    // ── Public state
+    var phase: PomodoroPhase = .focus
+    var timeRemaining: Int   = 0
+    var isRunning: Bool      = false
+    var completedPomodoros: Int = 0
+    var todayStars: Int = 0
+
+    // ── Private
+    private var timerTask: Task<Void, Never>?
+    private var backgroundedAt: Date? = nil
+
+    // Number of focus pomodoros before a long break
+    private let longBreakInterval = 4
+
+    init() {
+        let today = DateHelper.formatDate(.now, format: "yyyy-MM-dd")
+        if starsDate == today {
+            todayStars = storedStars
+        } else {
+            // New day — reset star count
+            todayStars = 0
+            storedStars = 0
+            starsDate = today
+            completedPomodoros = 0
+        }
+        timeRemaining = focusMins * 60
+    }
+
+    // MARK: — Controls
+
+    func start() {
+        guard !isRunning else { return }
+        isRunning = true
+        scheduleBackgroundNotification()
+        timerTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard !Task.isCancelled else { break }
+                await MainActor.run { self?.tick() }
+            }
+        }
+    }
+
+    func pause() {
+        isRunning = false
+        timerTask?.cancel()
+        timerTask = nil
+        cancelPendingNotifications()
+    }
+
+    func stop() {
+        pause()
+        phase = .focus
+        timeRemaining = focusMins * 60
+        completedPomodoros = 0
+    }
+
+    func skipPhase() {
+        pause()
+        advancePhase()
+    }
+
+    // MARK: — Scene Phase Handling (called from OrionApp.swift)
+
+    func handleScenePhaseChange(_ newPhase: ScenePhase) {
+        switch newPhase {
+        case .background:
+            if isRunning {
+                backgroundedAt = Date.now
+            }
+        case .active:
+            if isRunning, let bg = backgroundedAt {
+                let elapsed = Int(Date.now.timeIntervalSince(bg))
+                backgroundedAt = nil
+                if elapsed > 0 {
+                    fastForward(seconds: elapsed)
+                }
+            }
+        default:
+            break
+        }
+    }
+
+    // MARK: — Fast-Forward (background drift compensation)
+    // Advances the state machine by `seconds` worth of elapsed time, handling
+    // multiple phase rollovers correctly.
+    func fastForward(seconds: Int) {
+        var remaining = seconds
+        while remaining > 0 {
+            if remaining >= timeRemaining {
+                remaining -= timeRemaining
+                advancePhase()
+            } else {
+                timeRemaining -= remaining
+                remaining = 0
+            }
+        }
+    }
+
+    // MARK: — Internal
+
+    private func tick() {
+        guard isRunning else { return }
+        if timeRemaining > 0 {
+            timeRemaining -= 1
+        } else {
+            advancePhase()
+        }
+    }
+
+    private func advancePhase() {
+        cancelPendingNotifications()
+        switch phase {
+        case .focus:
+            completedPomodoros += 1
+            grantStar()
+            if completedPomodoros % longBreakInterval == 0 {
+                phase = .longBreak
+                timeRemaining = longMins * 60
+            } else {
+                phase = .shortBreak
+                timeRemaining = shortMins * 60
+            }
+        case .shortBreak, .longBreak:
+            phase = .focus
+            timeRemaining = focusMins * 60
+        }
+        if isRunning {
+            scheduleBackgroundNotification()
+        }
+    }
+
+    private func grantStar() {
+        let today = DateHelper.formatDate(.now, format: "yyyy-MM-dd")
+        if starsDate != today {
+            todayStars = 0
+            storedStars = 0
+            starsDate = today
+        }
+        todayStars += 1
+        storedStars = todayStars
+    }
+
+    // MARK: — Notifications
+
+    private func scheduleBackgroundNotification() {
+        cancelPendingNotifications()
+        let content = UNMutableNotificationContent()
+        let phaseLabel = phase.rawValue
+        content.title = "Orion · \(phaseLabel) Complete"
+        content.body  = phase == .focus ? "Focus session done ⭐ — take a break!" : "Break's over — back to the stars 🚀"
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(timeRemaining), repeats: false)
+        let request  = UNNotificationRequest(identifier: "orion_pomodoro_phase", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+
+    private func cancelPendingNotifications() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["orion_pomodoro_phase"])
+    }
+
+    // MARK: — Computed Helpers
+
+    var progress: Double {
+        let total = totalDurationForCurrentPhase
+        guard total > 0 else { return 0 }
+        return 1.0 - (Double(timeRemaining) / Double(total))
+    }
+
+    var timeDisplay: String {
+        DateHelper.formatSeconds(timeRemaining)
+    }
+
+    private var totalDurationForCurrentPhase: Int {
+        switch phase {
+        case .focus:      return focusMins * 60
+        case .shortBreak: return shortMins * 60
+        case .longBreak:  return longMins * 60
+        }
+    }
+}

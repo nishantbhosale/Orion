@@ -9,6 +9,8 @@ struct OrionApp: App {
 
     @AppStorage(UserPreferencesKey.hasOnboarded) private var hasOnboarded: Bool = false
     @State private var studyStatsService = StudyStatsService()
+    @State private var pomodoroManager = PomodoroManager()
+    @Environment(\.scenePhase) private var scenePhase
 
     let modelContainer: ModelContainer
 
@@ -62,7 +64,11 @@ struct OrionApp: App {
             }
             .modelContainer(modelContainer)
             .environment(studyStatsService)
+            .environment(pomodoroManager)
             .preferredColorScheme(.dark)
+            .onChange(of: scenePhase) { _, newPhase in
+                pomodoroManager.handleScenePhaseChange(newPhase)
+            }
             .task {
                 // Validate streak on every launch (async, not blocking main thread)
                 let context = ModelContext(modelContainer)

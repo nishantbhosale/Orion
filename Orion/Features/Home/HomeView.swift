@@ -11,6 +11,7 @@ struct HomeView: View {
 
     @AppStorage(UserPreferencesKey.userName) private var userName: String = "Astronaut"
     @Environment(StudyStatsService.self) private var statsService
+    @Environment(PomodoroManager.self) private var pomodoroManager
 
     init(studyRepo: StudyRepository, gymRepo: GymRepository, streakUseCase: StreakUseCase) {
         _viewModel = State(initialValue: HomeViewModel(
@@ -143,6 +144,25 @@ struct HomeView: View {
                         maxDays: 20
                     )
                     .padding(.top, Spacing.xs)
+                    
+                    // Pomodoro stars earned today
+                    if pomodoroManager.todayStars > 0 {
+                        HStack(spacing: 4) {
+                            ForEach(0..<min(pomodoroManager.todayStars, 8), id: \.self) { _ in
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(Color.streakGold)
+                                    .shadow(color: Color.streakGold.opacity(0.7), radius: 4)
+                            }
+                            if pomodoroManager.todayStars > 8 {
+                                Text("+\(pomodoroManager.todayStars - 8)")
+                                    .font(.moonCaption(11))
+                                    .foregroundStyle(Color.streakGold)
+                            }
+                        }
+                        .padding(.top, 2)
+                        .transition(.scale.combined(with: .opacity))
+                    }
                 }
                 .padding(Spacing.lg)
             }
