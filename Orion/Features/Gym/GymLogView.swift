@@ -15,12 +15,13 @@ struct GymLogView: View {
         allSessions.filter { DateHelper.isToday($0.date) }
     }
 
-    init(gymRepository: GymRepository, streakUseCase: StreakUseCase, modelContext: ModelContext) {
+    init(gymRepository: GymRepository, streakUseCase: StreakUseCase, modelContext: ModelContext, xpService: XPService? = nil) {
         _viewModel = State(initialValue: GymViewModel(
             gymRepository: gymRepository,
             streakUseCase: streakUseCase,
             templateRepository: WorkoutTemplateRepository(modelContext: modelContext),
-            prRepository: PRLogRepository(modelContext: modelContext)
+            prRepository: PRLogRepository(modelContext: modelContext),
+            xpService: xpService
         ))
     }
 

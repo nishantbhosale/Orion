@@ -12,6 +12,12 @@ final class HomeViewModel {
     private let gymRepository: GymRepository
     private let weightRepository: BodyMetricRepositoryProtocol
     let streakUseCase: StreakUseCase
+    weak var xpService: XPService?
+
+    // XP
+    var totalXP: Int = 0
+    var todayXP: Int = 0
+    var currentRank: OrionRank = .stargazer
 
     // Streak
     var displayedStreak: Int = 0
@@ -56,12 +62,14 @@ final class HomeViewModel {
         studyRepository: StudyRepository, 
         gymRepository: GymRepository, 
         weightRepository: BodyMetricRepositoryProtocol,
-        streakUseCase: StreakUseCase
+        streakUseCase: StreakUseCase,
+        xpService: XPService? = nil
     ) {
         self.studyRepository  = studyRepository
         self.gymRepository    = gymRepository
         self.weightRepository = weightRepository
         self.streakUseCase    = streakUseCase
+        self.xpService        = xpService
     }
 
     func onAppear() async {
@@ -78,6 +86,9 @@ final class HomeViewModel {
             gymSessionsToday  = todayGym.count
             currentStreak     = streakUseCase.currentStreak
             todayCompleted    = streakUseCase.todayCompleted
+            totalXP           = xpService?.totalXP ?? 0
+            todayXP           = xpService?.todayXP  ?? 0
+            currentRank       = xpService?.currentRank ?? .stargazer
             
             // Weight refresh
             if let weight = try weightRepository.fetchLatest() {

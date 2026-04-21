@@ -14,6 +14,7 @@ protocol BodyMetricRepositoryProtocol {
 @MainActor
 final class BodyMetricRepository: BodyMetricRepositoryProtocol {
     private let modelContext: ModelContext
+    weak var xpService: XPService?
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -48,7 +49,8 @@ final class BodyMetricRepository: BodyMetricRepositoryProtocol {
 
     func logWeight(_ weight: Double, notes: String?) async throws {
         let today = DateHelper.startOfDay(.now)
-        
+        let isNew = (try? todayLog()) == nil
+
         if let existing = try todayLog() {
             existing.weightKg = weight
             existing.notes = notes
@@ -56,7 +58,10 @@ final class BodyMetricRepository: BodyMetricRepositoryProtocol {
             let newLog = BodyMetricLog(date: today, weightKg: weight, notes: notes)
             modelContext.insert(newLog)
         }
-        
+
         try modelContext.save()
+
+        // Award XP only for first log of the day (not updates)
+        if isNew { await xpService?.award(.bodyWeightLogged) }
     }
 }

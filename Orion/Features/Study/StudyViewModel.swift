@@ -41,12 +41,13 @@ final class StudyViewModel {
 
     private let streakUseCase: StreakUseCase
 
-    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase) {
+    init(studyRepository: StudyRepository, streakUseCase: StreakUseCase, xpService: XPService? = nil) {
         self.studyRepository = studyRepository
         self.streakUseCase = streakUseCase
         self.logUseCase = LogStudySessionUseCase(
             studyRepository: studyRepository,
-            streakUseCase: streakUseCase
+            streakUseCase: streakUseCase,
+            xpService: xpService
         )
     }
 
@@ -197,8 +198,9 @@ final class PomodoroManager {
     var todayStars: Int = 0
 
     // ── Private
-    private var timerTask: Task<Void, Never>?
+    private var timerTask: Task<Void, Never>? = nil
     private var backgroundedAt: Date? = nil
+    weak var xpService: XPService?    // Set from OrionApp after init
 
     // Number of focus pomodoros before a long break
     private let longBreakInterval = 4
@@ -305,6 +307,8 @@ final class PomodoroManager {
         case .focus:
             completedPomodoros += 1
             grantStar()
+            // Award XP for completing a pomodoro (focus phase only; skip doesn't award)
+            Task { await xpService?.award(.pomodoroCompleted) }
             if completedPomodoros % longBreakInterval == 0 {
                 phase = .longBreak
                 timeRemaining = longMins * 60

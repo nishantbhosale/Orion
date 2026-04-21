@@ -11,6 +11,7 @@ struct OrionApp: App {
     @State private var studyStatsService = StudyStatsService()
     @State private var pomodoroManager = PomodoroManager()
     @State private var restTimerManager = RestTimerManager()
+    @State private var xpService: XPService
     @Environment(\.scenePhase) private var scenePhase
 
     let modelContainer: ModelContainer
@@ -23,7 +24,8 @@ struct OrionApp: App {
             StreakData.self,
             BodyMetricLog.self,
             WorkoutTemplate.self,
-            PRLog.self
+            PRLog.self,
+            XPLog.self
         ])
 
         // Try the normal versioned container first.
@@ -55,6 +57,7 @@ struct OrionApp: App {
                 fatalError("Failed to create ModelContainer even after store reset: \(error)")
             }
         }
+        _xpService = State(initialValue: XPService(modelContext: modelContainer.mainContext))
     }
 
     var body: some Scene {
@@ -70,6 +73,7 @@ struct OrionApp: App {
             .environment(studyStatsService)
             .environment(pomodoroManager)
             .environment(restTimerManager)
+            .environment(xpService)
             .preferredColorScheme(.dark)
             .onChange(of: scenePhase) { _, newPhase in
                 pomodoroManager.handleScenePhaseChange(newPhase)
@@ -77,14 +81,21 @@ struct OrionApp: App {
                     restTimerManager.handleBackground()
                 } else if newPhase == .active {
                     restTimerManager.handleForeground()
+                    Task { await xpService.refreshTotals() }
                 }
             }
             .task {
+                // Wire xpService into pomodoroManager (can't be done in init due to @State isolation)
+                pomodoroManager.xpService = xpService
+
                 // Validate streak on every launch (async, not blocking main thread)
                 let context = ModelContext(modelContainer)
                 let habitRepo = HabitRepository(modelContext: context)
                 let streakUC  = StreakUseCase(habitRepository: habitRepo)
                 await streakUC.validateAndUpdateStreak()
+
+                // Seed initial XP totals
+                await xpService.refreshTotals()
 
                 // Request notification permission
                 NotificationManager.shared.requestPermission()
@@ -93,56 +104,5 @@ struct OrionApp: App {
     }
 }
 
-// MARK: — Root View with Custom Tab Bar
-struct OrionRootView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var selectedTab: OrionTab = .home
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            // Tab content
-            Group {
-                switch selectedTab {
-                case .home:
-                    HomeView(
-                        studyRepo: StudyRepository(modelContext: modelContext),
-                        gymRepo:   GymRepository(modelContext: modelContext),
-                        weightRepo: BodyMetricRepository(modelContext: modelContext),
-                        streakUseCase: makeStreakUseCase()
-                    )
-                case .study:
-                    NavigationStack {
-                        StudyLogView(
-                            studyRepository: StudyRepository(modelContext: modelContext),
-                            streakUseCase: makeStreakUseCase()
-                        )
-                    }
-                case .gym:
-                    NavigationStack {
-                        GymLogView(
-                            gymRepository: GymRepository(modelContext: modelContext),
-                            streakUseCase: makeStreakUseCase(),
-                            modelContext: modelContext
-                        )
-                    }
-                case .history:
-                    HistoryView(
-                        studyRepo: StudyRepository(modelContext: modelContext),
-                        gymRepo:   GymRepository(modelContext: modelContext),
-                        streakUseCase: makeStreakUseCase()
-                    )
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            // Custom tab bar   
-            CosmicTabBar(selectedTab: $selectedTab)
-        }
-        .ignoresSafeArea(edges: .bottom)
-    }
-
-    private func makeStreakUseCase() -> StreakUseCase {
-        let habitRepo = HabitRepository(modelContext: modelContext)
-        return StreakUseCase(habitRepository: habitRepo)
-    }
-}
+// MARK: — Root View (extracted to Features/App/OrionRootView.swift)
+// OrionRootView is now defined in Features/App/OrionRootView.swift

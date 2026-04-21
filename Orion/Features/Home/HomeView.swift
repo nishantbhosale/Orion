@@ -11,14 +11,16 @@ struct HomeView: View {
 
     @AppStorage(UserPreferencesKey.userName) private var userName: String = "Astronaut"
     @Environment(StudyStatsService.self) private var statsService
-    @Environment(PomodoroManager.self) private var pomodoroManager
+    @Environment(PomodoroManager.self)   private var pomodoroManager
+    @Environment(XPService.self)         private var xpService
 
-    init(studyRepo: StudyRepository, gymRepo: GymRepository, weightRepo: BodyMetricRepositoryProtocol, streakUseCase: StreakUseCase) {
+    init(studyRepo: StudyRepository, gymRepo: GymRepository, weightRepo: BodyMetricRepositoryProtocol, streakUseCase: StreakUseCase, xpService: XPService? = nil) {
         _viewModel = State(initialValue: HomeViewModel(
             studyRepository: studyRepo,
             gymRepository: gymRepo,
             weightRepository: weightRepo,
-            streakUseCase: streakUseCase
+            streakUseCase: streakUseCase,
+            xpService: xpService
         ))
     }
 
@@ -39,7 +41,7 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToStreak) {
-                StreakView(streakUseCase: viewModel.streakUseCase, modelContext: modelContext)
+                StreakView(streakUseCase: viewModel.streakUseCase, modelContext: modelContext, xpService: xpService)
             }
             .navigationDestination(isPresented: $navigateToSettings) {
                 SettingsView()
@@ -62,6 +64,20 @@ struct HomeView: View {
                     if let weightStr = viewModel.latestWeightStr {
                         Text(weightStr)
                             .font(.moonCaption(11))
+                            .foregroundStyle(Color.auroraTeal)
+                    }
+                }
+            }
+
+            // XP Display
+            if viewModel.totalXP > 0 {
+                VStack(alignment: .center, spacing: 2) {
+                    Text("✦ \(viewModel.totalXP) XP")
+                        .font(.system(.caption, design: .monospaced).weight(.semibold))
+                        .foregroundStyle(Color.streakGold)
+                    if viewModel.todayXP > 0 {
+                        Text("+\(viewModel.todayXP) today")
+                            .font(.moonCaption(10))
                             .foregroundStyle(Color.auroraTeal)
                     }
                 }

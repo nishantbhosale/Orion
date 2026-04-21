@@ -16,7 +16,8 @@ enum SchemaV1: VersionedSchema {
             StreakData.self,
             BodyMetricLog.self,
             WorkoutTemplate.self,
-            PRLog.self
+            PRLog.self,
+            XPLog.self
         ]
     }
 }
