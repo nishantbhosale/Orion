@@ -12,6 +12,8 @@ struct ExerciseEntry: Codable, Identifiable {
     var reps: Int?
     var weightKg: Double?
     var durationSeconds: Int?   // for timed exercises like planks
+    var muscleGroup: MuscleGroup?   // NEW — Phase 5 (Volume)
+    var restSeconds: Int = 90       // NEW — Phase 3 (Rest Timer)
 
     /// Summary string e.g. "Bench Press 4×8 @ 80kg"
     var summary: String {
@@ -27,6 +29,25 @@ struct ExerciseEntry: Codable, Identifiable {
             parts.append("@ \(String(format: "%.1f", weight))kg")
         }
         return parts.joined(separator: " ")
+    }
+}
+
+enum MuscleGroup: String, CaseIterable, Codable {
+    case chest, back, shoulders, legs, arms, core, fullBody, cardio
+
+    var displayName: String { rawValue.capitalized }
+    
+    var systemImage: String {
+        switch self {
+        case .chest: return "figure.strengthtraining.traditional"
+        case .back: return "figure.rower"
+        case .shoulders: return "figure.arms.open"
+        case .legs: return "figure.run"
+        case .arms: return "figure.flexibility"
+        case .core: return "figure.core.training"
+        case .fullBody: return "figure.mixed.cardio"
+        case .cardio: return "heart.fill"
+        }
     }
 }
 

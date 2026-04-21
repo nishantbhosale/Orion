@@ -13,7 +13,10 @@ enum SchemaV1: VersionedSchema {
             StudySession.self,
             GymSession.self,
             HabitLog.self,
-            StreakData.self
+            StreakData.self,
+            BodyMetricLog.self,
+            WorkoutTemplate.self,
+            PRLog.self
         ]
     }
 }

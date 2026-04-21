@@ -24,6 +24,9 @@ enum UserPreferencesKey {
     static let pomodoroLongBreakMinutes     = "pomodoroLongBreakMinutes"
     static let todayPomodoroStars           = "todayPomodoroStars"
     static let todayPomodoroStarsDate       = "todayPomodoroStarsDate"
+    
+    // Gym / Body Weight Keys
+    static let weightUnit                   = "weightUnit"
 }
 
 // MARK: — Default Values

@@ -13,10 +13,11 @@ struct HomeView: View {
     @Environment(StudyStatsService.self) private var statsService
     @Environment(PomodoroManager.self) private var pomodoroManager
 
-    init(studyRepo: StudyRepository, gymRepo: GymRepository, streakUseCase: StreakUseCase) {
+    init(studyRepo: StudyRepository, gymRepo: GymRepository, weightRepo: BodyMetricRepositoryProtocol, streakUseCase: StreakUseCase) {
         _viewModel = State(initialValue: HomeViewModel(
             studyRepository: studyRepo,
             gymRepository: gymRepo,
+            weightRepository: weightRepo,
             streakUseCase: streakUseCase
         ))
     }
@@ -38,7 +39,7 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToStreak) {
-                StreakView(streakUseCase: viewModel.streakUseCase)
+                StreakView(streakUseCase: viewModel.streakUseCase, modelContext: modelContext)
             }
             .navigationDestination(isPresented: $navigateToSettings) {
                 SettingsView()
@@ -54,9 +55,16 @@ struct HomeView: View {
             // Constellation logo + title
             HStack(spacing: Spacing.sm) {
                 ConstellationLogoView()
-                Text("Orion")
-                    .font(.cosmicTitle(28))
-                    .foregroundStyle(Color.starWhite)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Orion")
+                        .font(.cosmicTitle(28))
+                        .foregroundStyle(Color.starWhite)
+                    if let weightStr = viewModel.latestWeightStr {
+                        Text(weightStr)
+                            .font(.moonCaption(11))
+                            .foregroundStyle(Color.auroraTeal)
+                    }
+                }
             }
 
             Spacer()
@@ -193,7 +201,8 @@ struct HomeView: View {
             NavigationLink {
                 GymLogView(
                     gymRepository: GymRepository(modelContext: modelContext),
-                    streakUseCase: viewModel.streakUseCase
+                    streakUseCase: viewModel.streakUseCase,
+                    modelContext: modelContext
                 )
             } label: {
                 HabitCategoryCard(

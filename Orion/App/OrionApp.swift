@@ -10,6 +10,7 @@ struct OrionApp: App {
     @AppStorage(UserPreferencesKey.hasOnboarded) private var hasOnboarded: Bool = false
     @State private var studyStatsService = StudyStatsService()
     @State private var pomodoroManager = PomodoroManager()
+    @State private var restTimerManager = RestTimerManager()
     @Environment(\.scenePhase) private var scenePhase
 
     let modelContainer: ModelContainer
@@ -19,7 +20,10 @@ struct OrionApp: App {
             StudySession.self,
             GymSession.self,
             HabitLog.self,
-            StreakData.self
+            StreakData.self,
+            BodyMetricLog.self,
+            WorkoutTemplate.self,
+            PRLog.self
         ])
 
         // Try the normal versioned container first.
@@ -65,9 +69,15 @@ struct OrionApp: App {
             .modelContainer(modelContainer)
             .environment(studyStatsService)
             .environment(pomodoroManager)
+            .environment(restTimerManager)
             .preferredColorScheme(.dark)
             .onChange(of: scenePhase) { _, newPhase in
                 pomodoroManager.handleScenePhaseChange(newPhase)
+                if newPhase == .background {
+                    restTimerManager.handleBackground()
+                } else if newPhase == .active {
+                    restTimerManager.handleForeground()
+                }
             }
             .task {
                 // Validate streak on every launch (async, not blocking main thread)
@@ -97,6 +107,7 @@ struct OrionRootView: View {
                     HomeView(
                         studyRepo: StudyRepository(modelContext: modelContext),
                         gymRepo:   GymRepository(modelContext: modelContext),
+                        weightRepo: BodyMetricRepository(modelContext: modelContext),
                         streakUseCase: makeStreakUseCase()
                     )
                 case .study:
@@ -110,7 +121,8 @@ struct OrionRootView: View {
                     NavigationStack {
                         GymLogView(
                             gymRepository: GymRepository(modelContext: modelContext),
-                            streakUseCase: makeStreakUseCase()
+                            streakUseCase: makeStreakUseCase(),
+                            modelContext: modelContext
                         )
                     }
                 case .history:
